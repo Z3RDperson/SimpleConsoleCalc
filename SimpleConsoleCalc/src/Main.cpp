@@ -9,4 +9,5 @@ int main()
 	std::cin.get();
 	// Exit with status 0 if everything fine
 	return 0;
+	//lol
 }
