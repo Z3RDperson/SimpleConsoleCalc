@@ -15,7 +15,7 @@ int main()
 	std::string buffer;
 	std::getline(std::cin, buffer);
 
-	// Process and parse text
+	// Clean and parse text
 
 	// Print result
 
