@@ -1,9 +1,10 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "Calculator.h"
 
-/* Vector for operands
-std::vector<Operand> operands; */
+// Vector for operands
+std::vector<Operand> operands; 
 
 // Parse text into numbers and operators
 double parser(std::string cleanPrompt)
