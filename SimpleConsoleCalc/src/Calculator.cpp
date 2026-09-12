@@ -42,6 +42,9 @@ long double parser(std::string cleanPrompt)
 			case '%':
 				solve_overwrite(i, modulo_w_next);
 				break;
+
+			default:
+				continue;
 			}
 
 			printElements(); // FOR DEBUGGING PURPOSES
@@ -50,6 +53,25 @@ long double parser(std::string cleanPrompt)
 	}
 
 	// Do Addition - Substraction operations
+	while (hasOperations_low())
+	{
+		for (int i = 0; i < operands.size(); i++)
+		{
+			switch (operands[i].getOpAfter())
+			{
+			case '+':
+				solve_overwrite(i, add_w_next);
+				break;
+
+			case '-':
+				solve_overwrite(i, substract_w_next);
+				break;
+			}
+
+			printElements(); // FOR DEBUGGING PURPOSES
+			break;
+		}
+	}
 
 	// RETURN THE RESULT OF THE FINAL VECTOR ELEMENT
 	return operands[0].getNumber();
@@ -118,6 +140,27 @@ bool hasOperations_high()
 	for (Operand operand : operands)
 	{
 		if (operand.getOpAfter() == '*' || operand.getOpAfter() == '/' || operand.getOpAfter() == '%')
+			return true;
+	}
+
+	return false;
+}
+
+long double add_w_next(int index)
+{
+	return operands[index].getNumber() + operands[index + 1].getNumber();
+}
+
+long double substract_w_next(int index)
+{
+	return operands[index].getNumber() - operands[index + 1].getNumber();
+}
+
+bool hasOperations_low()
+{
+	for (Operand operand : operands)
+	{
+		if (operand.getOpAfter() == '+' || operand.getOpAfter() == '-')
 			return true;
 	}
 

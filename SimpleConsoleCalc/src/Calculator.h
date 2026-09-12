@@ -39,6 +39,9 @@ long double multiply_w_next(int index);
 long double divide_w_next(int index);
 long double modulo_w_next(int index);
 bool hasOperations_high();
+long double add_w_next(int index);
+long double substract_w_next(int index);
+bool hasOperations_low();
 
 void solve_overwrite(int index, long double (*operationPtr)(int));
 
