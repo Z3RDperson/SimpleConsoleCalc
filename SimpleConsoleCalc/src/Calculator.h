@@ -1,19 +1,10 @@
 #pragma once
 
-// Functions Declarations
-double parser(std::string cleanPrompt);
-std::string cleaner(std::string prompt);
-void extract_store(std::string prompt, int startIndex, int finishIndex);
-bool isOperator(char op);
-
-// FOR DEBUGGING ONLY
-void printElements();
-
 // Operand class definition
 class Operand
 {
 public:
-	void setNumber(double user_number)
+	void setNumber(long double user_number)
 	{
 		m_number = user_number;
 	}
@@ -23,7 +14,7 @@ public:
 		m_opAfter = opAfter;
 	}
 
-	double getNumber() const
+	long double getNumber() const
 	{
 		return m_number;
 	}
@@ -34,6 +25,22 @@ public:
 	}
 
 private:
-	double m_number;
+	long double m_number;
 	char m_opAfter;
 };
+
+
+long double parser(std::string cleanPrompt);
+std::string cleaner(std::string prompt);
+void extract_store(std::string prompt, int startIndex, int finishIndex);
+bool isOperator(char op);
+
+long double multiply_w_next(int index);
+long double divide_w_next(int index);
+long double modulo_w_next(int index);
+bool hasOperations_high();
+
+void solve_overwrite(int index, long double (*operationPtr)(int));
+
+// FOR DEBUGGING ONLY
+void printElements();

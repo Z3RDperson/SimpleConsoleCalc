@@ -3,11 +3,11 @@
 #include <vector>
 #include "Calculator.h"
 
-// Vector for pointers to operands
-std::vector<Operand*> operands; 
+// Global vector for operands
+std::vector<Operand> operands; 
 
 // Parse text into numbers and operators
-double parser(std::string cleanPrompt)
+long double parser(std::string cleanPrompt)
 {
 	int numberStart_index{ -1 };
 
@@ -21,27 +21,38 @@ double parser(std::string cleanPrompt)
 			numberStart_index = i;
 		}
 	}
+	
+	printElements(); // FOR DEBUGGING PURPOSES
+
+	// Do multiplication - division - modulo operations
+	while (hasOperations_high())
+	{
+		for (int i = 0; i < operands.size(); i++)
+		{
+			switch (operands[i].getOpAfter())
+			{
+			case '*':
+				solve_overwrite(i, multiply_w_next);
+				break;
+
+			case '/':
+				solve_overwrite(i, divide_w_next);
+				break;
+
+			case '%':
+				solve_overwrite(i, modulo_w_next);
+				break;
+			}
+
+			printElements(); // FOR DEBUGGING PURPOSES
+			break;
+		}
+	}
+
+	// Do Addition - Substraction operations
 
 	// RETURN THE RESULT OF THE FINAL VECTOR ELEMENT
-	return 1;
-
-	/*
-	While there is still multiplication/division/modulo left:
-		Loop through each number in operands vector/array
-			If operator after is multiplication or division or modulo:
-				Solve the operand with the one after it
-				Store result in first one (overwrite its value)
-				Store the operator after the second operand in first one
-				Erase second operand from the vector
-
-	While there is still addition/substraction left:
-		Loop through each number in operands vector/array
-			If operator after is addition/substraction:
-				Solve the operand with the one after it
-				Store result in first one (overwrite its value)
-				Store the operator after the second operand in first one
-				Erase second operand from the vector
-	*/
+	return operands[0].getNumber();
 }
 
 // Clean the prompt and add 'L' at end for last operand
@@ -52,6 +63,7 @@ std::string cleaner(std::string prompt)
 	// Remove spaces and any characters other than integers and operators
 
 	// Add 'L' at the end so we know where the prompt stops
+	cleanPrompt = prompt + "L";
 
 	return cleanPrompt;
 }
@@ -67,9 +79,9 @@ void extract_store(std::string prompt, int startIndex, int finishIndex)
 	}
 
 	// Instantiate Operand object
-	Operand* operand = new Operand;
-	operand->setNumber(std::stod(numberBuffer));
-	operand->setOpAfter(prompt[finishIndex]); // finish character is the operator after number
+	Operand operand;
+	operand.setNumber(std::stod(numberBuffer));
+	operand.setOpAfter(prompt[finishIndex]); // finish character is the operator after number
 
 	// Store the operand in the vector
 	operands.push_back(operand);
@@ -84,12 +96,50 @@ bool isOperator(char op)
 		return false;
 }
 
+//===============================================================================
+
+long double multiply_w_next(int index)
+{
+	return operands[index].getNumber() * operands[index + 1].getNumber();
+}
+
+long double divide_w_next(int index)
+{
+	return operands[index].getNumber() / operands[index + 1].getNumber();
+}
+
+long double modulo_w_next(int index)
+{
+	return (int)(operands[index].getNumber()) % (int) (operands[index + 1].getNumber());
+}
+
+bool hasOperations_high()
+{
+	for (Operand operand : operands)
+	{
+		if (operand.getOpAfter() == '*' || operand.getOpAfter() == '/' || operand.getOpAfter() == '%')
+			return true;
+	}
+
+	return false;
+}
+
+void solve_overwrite(int index, long double (*operationPtr)(int))
+{
+	operands[index].setNumber(operationPtr(index));
+	operands[index].setOpAfter(operands[index + 1].getOpAfter());
+	operands.erase(operands.begin() + index + 1);
+}
+
+
+
 // FOR DEBUGGING ONLY : print vector contents
 void printElements()
 {
-	for (Operand* number : operands)
+	for (Operand number : operands)
 	{
-		std::cout << number->getNumber() << " " << number->getOpAfter()
-			<< "\n";
+		std::cout << number.getNumber() << " " << number.getOpAfter() << "\n";
 	}
+
+	std::cout << "------------------------------\n";
 }

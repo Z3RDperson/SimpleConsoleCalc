@@ -10,11 +10,11 @@ int main()
 	std::getline(std::cin, buffer);
 
 	// Clean and parse text
-	//std::string cleanPrompt = cleaner(buffer);
-	double result = parser(buffer);
+	std::string cleanPrompt = cleaner(buffer);
+	long double result = parser(cleanPrompt);
 
 	// Print result
-	printElements();
+	std::cout << "Result       : " << result << std::endl;
 
 	std::cin.get();
 }
