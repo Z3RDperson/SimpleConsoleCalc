@@ -11,7 +11,8 @@ long double parser(std::string cleanPrompt)
 {
 	int numberStart_index{ -1 };
 
-	// Loop through each character of prompt to extract numbers to be operated on
+	// Loop through each character of prompt
+	// to extract numbers to be operated on
 	for (int i = 0, length = (int) strlen(cleanPrompt.c_str()); i < length; i++)
 	{
 		if (isOperator(cleanPrompt[i]))
@@ -90,8 +91,9 @@ std::string cleaner(std::string prompt)
 	return cleanPrompt;
 }
 
-// Extract a number in a specified range of prompt text and store it in operands vector
-void extract_store(std::string prompt, int startIndex, int finishIndex)
+// Extract a number in a specified range of prompt text 
+// and store it in operands vector
+static void extract_store(std::string prompt, int startIndex, int finishIndex)
 {
 	std::string numberBuffer;
 
@@ -101,62 +103,64 @@ void extract_store(std::string prompt, int startIndex, int finishIndex)
 	}
 
 	// Instantiate Operand object
-	Operand operand;
-	operand.setNumber(std::stod(numberBuffer));
-	operand.setOpAfter(prompt[finishIndex]); // finish character is the operator after number
+	Operand operand(std::stod(numberBuffer), prompt[finishIndex]);
+	// finish character is the operator after number
 
 	// Store the operand in the vector
 	operands.push_back(operand);
 }
 
 // Check if a character is an operator
-bool isOperator(char op)
+static bool isOperator(char op)
 {
-	if (op == '+' || op == '-' || op == '*' || op == '/' || op == '%' || op == 'L')
+	if (op == '+' || op == '-' 
+		|| op == '*' || op == '/' || op == '%' || op == 'L')
 		return true;
 	else
 		return false;
 }
 
-//===============================================================================
+//=======================================================================
 
-long double multiply_w_next(int index)
+static long double multiply_w_next(int index)
 {
 	return operands[index].getNumber() * operands[index + 1].getNumber();
 }
 
-long double divide_w_next(int index)
+static long double divide_w_next(int index)
 {
 	return operands[index].getNumber() / operands[index + 1].getNumber();
 }
 
-long double modulo_w_next(int index)
+static long double modulo_w_next(int index)
 {
-	return (int)(operands[index].getNumber()) % (int) (operands[index + 1].getNumber());
+	return (int)(operands[index].getNumber()) 
+		% (int) (operands[index + 1].getNumber());
 }
 
-bool hasOperations_high()
+static bool hasOperations_high()
 {
 	for (Operand operand : operands)
 	{
-		if (operand.getOpAfter() == '*' || operand.getOpAfter() == '/' || operand.getOpAfter() == '%')
+		if (operand.getOpAfter() == '*' || operand.getOpAfter() == '/' 
+			|| operand.getOpAfter() == '%')
 			return true;
 	}
 
 	return false;
 }
 
-long double add_w_next(int index)
+static long double add_w_next(int index)
 {
 	return operands[index].getNumber() + operands[index + 1].getNumber();
 }
 
-long double substract_w_next(int index)
+static long double substract_w_next(int index)
 {
 	return operands[index].getNumber() - operands[index + 1].getNumber();
 }
 
-bool hasOperations_low()
+static bool hasOperations_low()
 {
 	for (Operand operand : operands)
 	{
@@ -167,7 +171,7 @@ bool hasOperations_low()
 	return false;
 }
 
-void solve_overwrite(int index, long double (*operationPtr)(int))
+static void solve_overwrite(int index, long double (*operationPtr)(int))
 {
 	operands[index].setNumber(operationPtr(index));
 	operands[index].setOpAfter(operands[index + 1].getOpAfter());
@@ -177,7 +181,7 @@ void solve_overwrite(int index, long double (*operationPtr)(int))
 
 
 // FOR DEBUGGING ONLY : print vector contents
-void printElements()
+static void printElements()
 {
 	for (Operand number : operands)
 	{
