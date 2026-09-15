@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <cctype>
 #include <vector>
 #include "Calculator.h"
 
@@ -90,9 +91,16 @@ std::string cleaner(std::string prompt)
 	std::string cleanPrompt;
 
 	// Remove spaces and any characters other than integers and operators
+	for (int i = 0, length = (int) strlen(prompt.c_str()); i < length; i++)
+	{
+		if (std::isdigit(prompt[i]) || isOperator(prompt[i]))
+		{
+			cleanPrompt += prompt[i];
+		}
+	}
 
 	// Add 'L' at the end so we know where the prompt stops
-	cleanPrompt = prompt + "L";
+	cleanPrompt += "L";
 
 	return cleanPrompt;
 }
