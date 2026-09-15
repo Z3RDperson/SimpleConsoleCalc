@@ -194,6 +194,19 @@ static void solve_overwrite(int index, long double (*operationPtr)(int))
 
 
 
+bool containDigits(std::string user_text)
+{
+	for (int i = 0, length = (int)strlen(user_text.c_str()); i < length; i++)
+	{
+		if (std::isdigit(user_text[i]))
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 // FOR DEBUGGING ONLY : print vector contents
 static void printElements()
 {

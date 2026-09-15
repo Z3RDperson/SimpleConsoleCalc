@@ -54,3 +54,5 @@ void solve_overwrite(int index, long double (*operationPtr)(int));
 
 // FOR DEBUGGING ONLY
 void printElements();
+
+bool containDigits(std::string user_text);

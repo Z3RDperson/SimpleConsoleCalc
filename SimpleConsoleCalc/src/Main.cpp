@@ -4,10 +4,14 @@
 
 int main()
 {
-	// Get user input
-	std::cout << "Type a prompt: ";
 	std::string buffer;
-	std::getline(std::cin, buffer);
+
+	// Get user input
+	do
+	{
+		std::cout << "Type a prompt: ";
+		std::getline(std::cin, buffer);
+	} while (!containDigits(buffer));
 
 	// Clean and parse text
 	std::string cleanPrompt = cleaner(buffer);
