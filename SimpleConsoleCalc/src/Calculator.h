@@ -36,7 +36,8 @@ private:
 };
 
 
-long double parser(std::string cleanPrompt);
+void parser(std::string cleanPrompt);
+long double calculate();
 std::string cleaner(std::string prompt);
 void extract_store(std::string prompt, int startIndex, int finishIndex);
 bool isOperator(char op);

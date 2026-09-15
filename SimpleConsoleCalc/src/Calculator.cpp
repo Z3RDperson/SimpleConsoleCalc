@@ -7,9 +7,9 @@
 std::vector<Operand> operands; 
 
 // Parse text into numbers and operators
-long double parser(std::string cleanPrompt)
+void parser(std::string cleanPrompt)
 {
-	int numberStart_index{ -1 };
+	int numberStart_index{ -1 }; // Character before first digit in the operand
 
 	// Loop through each character of prompt
 	// to extract numbers to be operated on
@@ -19,17 +19,22 @@ long double parser(std::string cleanPrompt)
 		{
 			extract_store(cleanPrompt, numberStart_index, i);
 
-			numberStart_index = i;
+			numberStart_index = i; // Re-assign to the character before next operand
 		}
 	}
 	
-	printElements(); // FOR DEBUGGING PURPOSES
+	printElements(); // FOR DEBUGGING PURPOSES	
+}
 
+// Calculate user prompt
+long double calculate()
+{
 	// Do multiplication - division - modulo operations
-	while (hasOperations_high())
+	while (hasOperations_high()) // if it still has operations of high order
 	{
 		for (int i = 0; i < operands.size(); i++)
 		{
+			// Determine operator and overwrite result to first operand
 			switch (operands[i].getOpAfter())
 			{
 			case '*':
@@ -54,10 +59,11 @@ long double parser(std::string cleanPrompt)
 	}
 
 	// Do Addition - Substraction operations
-	while (hasOperations_low())
+	while (hasOperations_low()) // if it still has operations of high order
 	{
 		for (int i = 0; i < operands.size(); i++)
 		{
+			// Determine operator and overwrite result to first operand
 			switch (operands[i].getOpAfter())
 			{
 			case '+':

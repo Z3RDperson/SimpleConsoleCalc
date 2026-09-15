@@ -11,7 +11,10 @@ int main()
 
 	// Clean and parse text
 	std::string cleanPrompt = cleaner(buffer);
-	long double result = parser(cleanPrompt);
+	parser(cleanPrompt);
+
+	// Calculate user prompt
+	long double result = calculate();
 
 	// Print result
 	std::cout << "Result       : " << result << std::endl;
