@@ -1,3 +1,11 @@
+// To use this calculator on a text prompt provided by user, follow these steps:
+// 
+// 1) Make sure user input contains numbers using : containDigits()
+// 2) Clean text to produce a prompt of numbers & operators only using : cleaner()
+// 3) Parse text into numbers and operators ...
+//    to store them in operand array using : parser()
+// 4) Calculate the final result from operands stored in the array using : calculate()
+
 #include <iostream>
 #include <string>
 #include <cctype>
