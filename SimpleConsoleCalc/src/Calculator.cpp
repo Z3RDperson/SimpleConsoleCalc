@@ -124,11 +124,12 @@ std::string cleaner(std::string prompt)
 // and store it in operands vector
 static void extract_store(std::string prompt, int startIndex, int finishIndex)
 {
-	std::string numberBuffer;
+	std::string numberBuffer = "0";
 
 	for (int i = startIndex + 1; i < finishIndex; i++)
 	{
-		numberBuffer += prompt[i];
+		if (std::isdigit(prompt[i]))
+			numberBuffer += prompt[i];
 	}
 
 	// Instantiate Operand object 
