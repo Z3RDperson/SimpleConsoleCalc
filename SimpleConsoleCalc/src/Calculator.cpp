@@ -2,10 +2,11 @@
 #include <string>
 #include <cctype>
 #include <vector>
+
 #include "Calculator.h"
 
 // Global vector for operands
-std::vector<Operand> operands; 
+std::vector<Operand> operands;
 
 // Parse text into numbers and operators
 void parser(std::string cleanPrompt)
@@ -14,13 +15,15 @@ void parser(std::string cleanPrompt)
 
 	// Loop through each character of prompt
 	// to extract numbers to be operated on
-	for (int i = 0, length = (int) strlen(cleanPrompt.c_str()); i < length; i++)
+	for (int current_index = 0, length = cleanPrompt.size(); 
+		current_index < length; current_index++)
 	{
-		if (isOperator(cleanPrompt[i]))
+		if (isOperator(cleanPrompt[current_index]))
 		{
-			extract_store(cleanPrompt, numberStart_index, i);
+			extract_store(cleanPrompt, numberStart_index, current_index);
 
-			numberStart_index = i; // Re-assign to the character before next operand
+			// Re-assign start index to the character before next operand (current)
+			numberStart_index = current_index;
 		}
 	}
 	
@@ -30,13 +33,15 @@ void parser(std::string cleanPrompt)
 // Calculate user prompt
 long double calculate()
 {
-	// Do multiplication - division - modulo operations
-	while (hasOperations_high()) // if it still has operations of high order
+	// Do multiplication - division - modulo operations in operands vector
+	// Operation functions argument is passed in solve_overwrite()
+	while (hasOperations_high())
 	{
-		for (int i = 0; i < operands.size(); i++)
+		for (int i = 0, length = operands.size(); i < length; i++)
 		{
-			// Determine operator and overwrite result to first operand
-			switch (operands[i].getOpAfter())
+			char op = operands[i].getOpAfter();
+
+			switch (op)
 			{
 			case '*':
 				solve_overwrite(i, multiply_w_next);
@@ -51,6 +56,7 @@ long double calculate()
 				break;
 
 			default:
+				// Pass and move on if operator of low order
 				continue;
 			}
 
@@ -59,13 +65,15 @@ long double calculate()
 		}
 	}
 
-	// Do Addition - Substraction operations
-	while (hasOperations_low()) // if it still has operations of high order
+	// Do Addition - Substraction operations in operands vector
+	// Operation functions arguments are passed in solve_overwrite()
+	while (hasOperations_low())
 	{
-		for (int i = 0; i < operands.size(); i++)
+		for (int i = 0, length = operands.size(); i < length; i++)
 		{
-			// Determine operator and overwrite result to first operand
-			switch (operands[i].getOpAfter())
+			char op = operands[i].getOpAfter();
+
+			switch (op)
 			{
 			case '+':
 				solve_overwrite(i, add_w_next);
@@ -81,7 +89,7 @@ long double calculate()
 		}
 	}
 
-	// RETURN THE RESULT OF THE FINAL VECTOR ELEMENT
+	// RETURN THE RESULT OF THE REMAINING VECTOR ELEMENT (1st element)
 	return operands[0].getNumber();
 }
 
@@ -90,16 +98,15 @@ std::string cleaner(std::string prompt)
 {
 	std::string cleanPrompt;
 
-	// Remove spaces and any characters other than integers and operators
-	for (int i = 0, length = (int) strlen(prompt.c_str()); i < length; i++)
+	// Remove spaces and any characters other than integers, floating point 
+	// and operators
+	for (int i = 0, length = prompt.size(); i < length; i++)
 	{
-		if (std::isdigit(prompt[i]) || isOperator(prompt[i]))
-		{
+		if (std::isdigit(prompt[i]) || isOperator(prompt[i]) || prompt[i] == '.')
 			cleanPrompt += prompt[i];
-		}
 	}
 
-	// Add 'L' at the end so we know where the prompt stops
+	// Add 'L' at the end so we know Last operand
 	cleanPrompt += "L";
 
 	return cleanPrompt;
@@ -116,22 +123,20 @@ static void extract_store(std::string prompt, int startIndex, int finishIndex)
 		numberBuffer += prompt[i];
 	}
 
-	// Instantiate Operand object
+	// Instantiate Operand object 
+	// and initialize it with the number and operator after it
 	Operand operand(std::stod(numberBuffer), prompt[finishIndex]);
-	// finish character is the operator after number
+	// NOTE: finish character is the operator after number
 
-	// Store the operand in the vector
+	// Store the operand in the global vector
 	operands.push_back(operand);
 }
 
 // Check if a character is an operator
 static bool isOperator(char op)
 {
-	if (op == '+' || op == '-' 
-		|| op == '*' || op == '/' || op == '%' || op == 'L')
-		return true;
-	else
-		return false;
+	return (op == '+' || op == '-' 
+		|| op == '*' || op == '/' || op == '%' || op == 'L');
 }
 
 //=======================================================================
@@ -152,12 +157,14 @@ static long double modulo_w_next(int index)
 		% (int) (operands[index + 1].getNumber());
 }
 
+// Check if prompt still has operations of low order
 static bool hasOperations_high()
 {
 	for (Operand operand : operands)
 	{
-		if (operand.getOpAfter() == '*' || operand.getOpAfter() == '/' 
-			|| operand.getOpAfter() == '%')
+		char op = operand.getOpAfter();
+
+		if (op == '*' || op == '/' || op == '%')
 			return true;
 	}
 
@@ -174,29 +181,37 @@ static long double substract_w_next(int index)
 	return operands[index].getNumber() - operands[index + 1].getNumber();
 }
 
+// Check if prompt still has operations of low order
 static bool hasOperations_low()
 {
 	for (Operand operand : operands)
 	{
-		if (operand.getOpAfter() == '+' || operand.getOpAfter() == '-')
+		char op = operand.getOpAfter();
+
+		if (op == '+' || op == '-')
 			return true;
 	}
 
 	return false;
 }
 
+// Solve operand on an index with one after it and overwrite the first
 static void solve_overwrite(int index, long double (*operationPtr)(int))
 {
+	// Solve and overwrite selected operand (current "index") value & operator after:
 	operands[index].setNumber(operationPtr(index));
 	operands[index].setOpAfter(operands[index + 1].getOpAfter());
+
+	// Remove the second operand
 	operands.erase(operands.begin() + index + 1);
 }
 
 
 
+// Check if user raw text contains digits
 bool containDigits(std::string user_text)
 {
-	for (int i = 0, length = (int)strlen(user_text.c_str()); i < length; i++)
+	for (int i = 0, length = user_text.size(); i < length; i++)
 	{
 		if (std::isdigit(user_text[i]))
 		{

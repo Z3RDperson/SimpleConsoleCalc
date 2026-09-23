@@ -5,10 +5,7 @@ class Operand
 {
 public:
 	Operand(long double number, char operator_after) 
-		: m_number{ number }, m_opAfter{ operator_after }
-	{
-		// Code executed when instantiated
-	}
+		: m_number{ number }, m_opAfter{ operator_after } {}
 
 	void setNumber(long double user_number)
 	{
