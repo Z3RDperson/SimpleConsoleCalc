@@ -19,6 +19,9 @@ std::vector<Operand> operands;
 // Parse text into numbers and operators
 void parser(std::string cleanPrompt)
 {
+	// Empty the global operands array (vector) to parse new prompt
+	emptyArray();
+
 	int numberStart_index{ -1 }; // Character before first digit in the operand
 
 	// Loop through each character of prompt
@@ -141,6 +144,13 @@ static void extract_store(std::string prompt, int startIndex, int finishIndex)
 	operands.push_back(operand);
 }
 
+// Empty the global operands array (vector)
+static void emptyArray()
+{
+	operands.clear();
+	operands.shrink_to_fit(); // Make size = 0
+}
+
 // Check if a character is an operator
 static bool isOperator(char op)
 {
@@ -166,7 +176,7 @@ static long double modulo_w_next(int index)
 		% (int) (operands[index + 1].getNumber());
 }
 
-// Check if prompt still has operations of low order
+// Check if prompt still has operations of high order
 static bool hasOperations_high()
 {
 	for (Operand operand : operands)
