@@ -131,7 +131,7 @@ static void extract_store(std::string prompt, int startIndex, int finishIndex)
 
 	for (int i = startIndex + 1; i < finishIndex; i++)
 	{
-		if (std::isdigit(prompt[i]))
+		if (std::isdigit(prompt[i]) || prompt[i] == '.')
 			numberBuffer += prompt[i];
 	}
 
