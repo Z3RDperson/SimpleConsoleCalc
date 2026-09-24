@@ -4,24 +4,27 @@
 
 int main()
 {
-	std::string buffer;
-
-	// Get user input
-	do
+	for (; ;)
 	{
-		std::cout << "Type a prompt: ";
-		std::getline(std::cin, buffer);
-	} while (!containDigits(buffer));
+		std::string buffer;
 
-	// Clean and parse text
-	std::string cleanPrompt = cleaner(buffer);
-	parser(cleanPrompt);
+		// Get user input
+		do
+		{
+			std::cout << "Type a prompt: ";
+			std::getline(std::cin, buffer);
+		} while (!containDigits(buffer));
 
-	// Calculate user prompt
-	long double result = calculate();
+		// Clean and parse text
+		std::string cleanPrompt = cleaner(buffer);
+		parser(cleanPrompt);
 
-	// Print result
-	std::cout << "Result       : " << result << std::endl;
+		// Calculate user prompt
+		long double result = calculate();
 
-	std::cin.get();
+		// Print result
+		std::cout << "Result       : " << result << std::endl;
+
+		std::cout << "==============================\n" << std::endl;
+	}
 }
