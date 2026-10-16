@@ -22,7 +22,8 @@ void parser(std::string cleanPrompt)
 	// Empty the global operands array (vector) to parse new prompt
 	emptyArray();
 
-	int numberStart_index{ -1 }; // Character before first digit in the operand
+	// Start by character before first digit in the operand
+	int numberStart_index{ BEFORE_FIRST_CHAR };
 
 	// Loop through each character of prompt
 	// to extract numbers to be operated on

@@ -1,5 +1,7 @@
 #pragma once
 
+#define BEFORE_FIRST_CHAR -1
+
 // Operand class definition
 class Operand
 {
